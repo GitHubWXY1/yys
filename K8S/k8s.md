@@ -332,6 +332,25 @@ nslookup 服务
 
 # 存储
 
+Volumes要解决的问题：
+
+* 容器崩溃停止时，容器的生存期内创建或修改的文件将丢失
+* 多个容器在 Pod 中运行时，会出现另一个问题，并且 需要共享文件
+
+Volumes的类型有：1.临时卷、2.持久卷
+
+使用卷: 在.spec.volumes中声明卷。在.spec.containers.volumeMounts 挂载到容器的目录
+
+spec.volumes->name和pvc
+
+spec.containers.volumeMounts->name和mountPath
+
+volumes的类型有：
+
+* configMap向pod注入配置数据的方法。configMap对象可以被configMap类型的卷引用，然后被pod中运行的容器应用使用
+
+  不能更改pod的volume字段，只能删除后再
+
 PV的回收策略：1.Delete 、2.Retain
 
 Delete：删除 PVC 时，PV 和其绑定的存储资源（如云提供商的存储卷）都会被删除。
@@ -363,3 +382,21 @@ allowVolumeExpansion: false
 使用k8s已有的volume类型，就是使用已经定义好的storageclass
 
 ![image-20240806115737677](C:\Users\47212\AppData\Roaming\Typora\typora-user-images\image-20240806115737677.png)
+
+通过kubectl get describe sc local-path 的详细信息
+
+```
+Name:            local-path
+IsDefaultClass:  Yes
+Annotations:     kubectl.kubernetes.io/last-applied-configuration={"apiVersion":"storage.k8s.io/v1","kind":"StorageClass","metadata":{"annotations":{},"name":"local-path"},"provisioner":"rancher.io/local-path","reclaimPolicy":"Delete","volumeBindingMode":"WaitForFirstConsumer"}
+,storageclass.kubernetes.io/is-default-class=true
+Provisioner:           rancher.io/local-path
+Parameters:            <none>
+AllowVolumeExpansion:  <unset>
+MountOptions:          <none>
+ReclaimPolicy:         Delete
+VolumeBindingMode:     WaitForFirstConsumer
+Events:                <none>
+```
+
+local-path用于在k8s中管理Local Persistent Volumes(本地存储卷)的storageclass。

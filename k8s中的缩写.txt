@@ -1,4 +1,0 @@
-svc -> service
-rc -> replication controller
-rs -> replica set
-domeset -> daemonSet

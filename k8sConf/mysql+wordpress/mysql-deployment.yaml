@@ -14,7 +14,7 @@ spec:
   selector:
     app: wordpress
     tier: mysql
-  # 无头服务
+  # headlessService:不为该service配置clusterIP()
   clusterIP: None
 ---
 # PVC声明

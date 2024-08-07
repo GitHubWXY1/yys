@@ -17,10 +17,11 @@ spec:
       containers:
       - name: php-redis
         image: us-docker.pkg.dev/google-samples/containers/gke/gb-frontend:v5
-        # 这里配置了什么
+        # 这里配置环境变量，用于容器启动后配置信息，可以在docker hub中查看相应镜像的 environment variable 用法和作用
         env:
         - name: GET_HOSTS_FROM
           value: "dns"
+        # 请求所需硬件资源
         resources:
           requests:
             cpu: 100m

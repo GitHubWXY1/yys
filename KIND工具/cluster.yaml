@@ -1,25 +1,6 @@
-kind: Cluster  
-apiVersion: kind.x-k8s.io/v1alpha4  
-networking:  
-  disableDefaultCNI: false  
-  # 这里可以添加代理配置  
-  kubeProxy:  
-    extraArgs:  
-      proxy-args: "http://your-proxy-server:port"  
-      
-kubelet:  
-  extraEnv:  
-    - name: HTTP_PROXY  
-      value: "http://your-proxy-server:port"  
-    - name: HTTPS_PROXY  
-      value: "http://your-proxy-server:port"  
-    - name: NO_PROXY  
-      value: "localhost,127.0.0.1,.yourdomain.com"
-      
-
-
-kind: Cluster
+# 使用kind创建cluster的例子
 apiVersion: kind.x-k8s.io/v1alpha4
+kind: Cluster
 networking:
   disableDefaultCNI: false
   kubeProxy:

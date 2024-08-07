@@ -1,0 +1,89 @@
+# Service声明
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress-mysql
+  labels:
+    app: wordpress
+spec:
+  # 服务监听端口
+  ports:
+  # service在3306监听外部来的请求。未写targetPort，则默认和port相同
+    - port: 3306
+  # 收到请求后，将请求转发到selector中的Pod
+  selector:
+    app: wordpress
+    tier: mysql
+  # 无头服务
+  clusterIP: None
+---
+# PVC声明
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+  labels:
+    app: wordpress
+spec:
+  # 存储卷的访问模式
+  accessModes:
+    # 一个节点读写挂载。还有多个节点 只读/读写 挂载模式
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
+# Deployment声明
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress-mysql
+  labels:
+    app: wordpress
+spec:
+  selector:
+    matchLabels:
+      app: wordpress
+      tier: mysql
+  # 1. 更新deployment时的策略类型：Recreate 先逐步用新版本的 Pod 替换旧版本的 Pod，确保在更新过程中应用的可用性。
+  strategy:
+  # RollingUpdate为默认配置
+    type: Recreate
+  template:
+  # pod 配置
+    metadata:
+      labels:
+        app: wordpress
+        tier: mysql
+    spec:
+      containers:
+      - image: mysql:8.0
+        name: mysql
+        # 2. 设置环境变量
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: password
+        - name: MYSQL_DATABASE
+          value: wordpress
+        - name: MYSQL_USER
+          value: wordpress
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: password
+        ports:
+        - containerPort: 3306
+          name: mysql
+        # 3. 声明卷在容器中的挂载位置
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      # 4. 声明Pod中使用的卷
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim

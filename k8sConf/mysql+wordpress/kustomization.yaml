@@ -1,0 +1,21 @@
+# Kustomize工具通过下面的secretGenerator生成secret.yaml配置文件。 执行kustomization.yaml  命令为 kubectl apply -k 此文件目录
+secretGenerator:
+- name: mysql-pass
+  literals:
+  - password=123456
+resources:
+  - mysql-deployment.yaml
+  - wordpress-deployment.yaml
+
+# secretGenerator:
+# - name: mysql-pass
+#   literals:
+#   - password=123456
+# 生成为-----secret.yaml
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: mysql-pass
+# type: Opaque
+# data:
+#   password: MTIzNDU2  # base64 encoded value of "123456"

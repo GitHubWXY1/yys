@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      editor: v1
+    matchExpressions: {key: editor, operators: In, values: {v: ''}}
+  template:
+
+  - metadata:
+      labels:
+        editor: v1
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: name
+        image: nginx

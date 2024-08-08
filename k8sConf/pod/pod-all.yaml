@@ -1,0 +1,50 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: my-name
+  labels:
+    name: my-name
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: my-name
+    spec:
+      containers:
+      - image: ipedrazas/docmock
+        name: my-name
+        resources:
+          requests:
+            cpu: "20m"
+            memory: "55M"
+        livenessProbe:
+          httpGet:
+            path: /_status/healthz
+            port: 5000
+          initialDelaySeconds: 90
+          timeoutSeconds: 10
+        readinessProbe: # 服务可用性检查
+          httpGet: # 探测方法 httpGet、 tcpSocket tcp端口、exec 容器内运行命令健康查看状态。
+            path: /_status/healthz # http请求路径，tcpSocket不需要，exec则是command 执行命令
+            port: 5000
+          initialDelaySeconds: 30 # 开始探测前延迟 单位秒
+          timeoutSeconds: 10 # 探测间隔
+        env:
+        - name: ENVVARNAME
+          value: ENVVARVALUE
+        ports:
+        - containerPort: 5000
+          name: my-name
+        volumeMounts:
+        - mountPath: /data
+          name: data
+      volumes:
+      - name: data
+        emptyDir: {}
+      restartPolicy: Always
+      imagePullPolicy: Always

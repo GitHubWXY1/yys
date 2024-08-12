@@ -10,9 +10,9 @@ metadata:
 spec:
   selector:
   - name: string
-  type: string # ClusterIP、NodePort、LoadBalancer
+  type: string # ClusterIP、NodePort、LoadBalancer 类型为 NodePort时
   clusterIP: string # 类型为ClusterIP，会自动分配也可手工指定。类型为LoadBalancer，需要指定。为None时为headless Service
-  sessionAffinity: string # 是否支持session，默认为None。可以选ClientIP：同一个客户端[根据ip]的请求都转发到同一个后端Pod
+  sessionAffinity: string # 是否支持session，默认为None 用于无状态服务。可以选ClientIP：同一个客户端[根据ip]的请求都转发到同一个后端Pod
   sessionAffinityConfig:
     clientIP:
       timeoutSeconds: 10800 # 设置会话保持时间为10800秒
@@ -22,7 +22,9 @@ spec:
     port: int # service 暴露的端口
     targetPort: int # 转发到Pod的端口
     nodePort: int # 当spec.type为NodePort时，指定映射到宿主机的端口
+  # loadBalancerService时 以下字段由云服务商进行补充
   status:
+
     LoadBalancer: # 当spec.type=LoadBalancer时，设置外部负载均衡的地址
       ingress: # 外部负载均衡的设置
         ip: string # 

@@ -1,50 +1,100 @@
-apiVersion: extensions/v1beta1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
   name: my-name
+  namespace: string
   labels:
-    name: my-name
+  - name: string
+  annotations:
+  - name: string
 spec:
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
-    type: RollingUpdate
-  template:
-    metadata:
-      labels:
-        name: my-name
-    spec:
-      containers:
-      - image: ipedrazas/docmock
-        name: my-name
-        resources:
-          requests:
-            cpu: "20m"
-            memory: "55M"
-        livenessProbe:
-          httpGet:
-            path: /_status/healthz
-            port: 5000
-          initialDelaySeconds: 90
-          timeoutSeconds: 10
-        readinessProbe: # 服务可用性检查
-          httpGet: # 探测方法 httpGet、 tcpSocket tcp端口、exec 容器内运行命令健康查看状态。
-            path: /_status/healthz # http请求路径，tcpSocket不需要，exec则是command 执行命令
-            port: 5000
-          initialDelaySeconds: 30 # 开始探测前延迟 单位秒
-          timeoutSeconds: 10 # 探测间隔
-        env:
-        - name: ENVVARNAME
-          value: ENVVARVALUE
-        ports:
-        - containerPort: 5000
-          name: my-name
-        volumeMounts:
-        - mountPath: /data
-          name: data
-      volumes:
-      - name: data
-        emptyDir: {}
-      restartPolicy: Always
-      imagePullPolicy: Always
+  containers:
+  - name: string
+    image: string
+    imagePullPolicy: # [镜像拉取策略，Always,Never,IfNotPresent]
+    command:
+    args:
+    workingDir:
+    volumeMounts:
+    - name:
+      mountPath:
+      readOnly: # 是否只读，默认读写
+    ports:
+    - name: Port Name
+      containerPort: # 容器监听端口
+      hostPort: # 容器所在主机的监听端口，设置hostPort时，同一台宿主机无法启动该容器第二份副本
+      protocol: TCP
+    env:
+    - name: string
+      value: string
+    resources:
+      limits: # 限制容器最多资源
+        cpu:
+        memory:
+      requests: # 限制容器最少资源
+        cpu:
+        memory:
+    livenessProbe: # 可用性检查 实质是检查pod内的容器，因此将可用性检查配置写在containers内部。
+      exec: # 探测方法 exec 容器内运行命令健康查看状态
+        command:
+      httpGet: # httpGet
+        path:
+        port:
+        host:
+        scheme:
+        httpHeaders:
+        - name:
+          value:
+      tcpSocket: # tcpSocket
+        port:
+      initialDelaySeconds: # 开始探测前延迟 单位秒
+      timeoutSeconds: # 响应超时时间，容器不健康，进行重启
+      periodSeconds: # 探测间隔
+      successThreshold: # 容器健康连续成功次数
+      failureThreshold: # 容器不健康连续失败次数
+    securityContext:
+      privileged:
+  restartPolicy: # pod重启策略，RS和DaemonSet是always，Job是Never或OnFailure
+  nodeSelector: #选定pod指定到某node内创建 可以
+    name: value
+  imagePullSecrets:
+  - name:
+  hostNetwork: Boolean # 是否使用主机网络，pod在该主机上无法启动第二个副本
+  volumes: # pod上定义的共享存储卷
+  - name:
+    emptyDir: {}
+    hostPath:
+      path:
+    secret:
+      secretName:
+      items:
+      - key:
+        path:
+    configMap:
+      name:
+      items:
+      - key:
+        path:
+
+#   name: my-name
+#   resources:
+#     requests:
+#       cpu: "20m"
+#       memory: "55M"
+#     limit:
+
+
+#   env:
+#   - name: ENVVARNAME
+#     value: ENVVARVALUE
+#   ports:
+#   - containerPort: 5000
+#     name: my-name
+#   volumeMounts:
+#   - mountPath: /data
+#     name: data
+# volumes:
+# - name: data
+#   emptyDir: {}
+# restartPolicy: Always
+# imagePullPolicy: Always

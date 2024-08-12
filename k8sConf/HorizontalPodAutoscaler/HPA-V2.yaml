@@ -1,0 +1,23 @@
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: php-apach
+spec:
+  scaleTargetRef: # 作用的目标对象是
+    apiVersion: apps/v1
+    kind: Deployment
+    name: php-apach
+  minReplices: 1 # 扩缩容Pod数量的范围
+  maxReplices: 10
+  metrics: # 目标指标值
+  - type: Resource # Pod的cpu和memory指标，
+    resource:
+      name: cpu # or memory
+      target:
+        type: Utilization # 或 AverageValue 平均内存使用值
+        averageUtilization: 50 # 平均cpu使用率
+  - type: Pods # 伸缩对象Pod的指标，第三方Adapter提供，
+
+  - type: Object # 
+
+  - type: External

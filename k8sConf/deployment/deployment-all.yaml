@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deploy
+  namespace: defualt
+  labels:
+    key: string
+  annotations:
+    key: string
+spec:
+  replicas: int # pod副本数量
+  revisionHistoryLimit: int # 保留历史版本的记录数量，默认为 10
+  strategy:
+    type: RollingUpdate # 可选Recreate
+    rollingUpdate:
+      maxUnavailable: int # 最多不可用pod数
+      maxSurge: int # 最少不可用pod数
+
+  selector: # pod标签选择器
+    matchLabels:
+      key: string
+    matchExpressions:
+      -key:
+        operators:
+        values:
+
+
+
+
+  template: # pod的模板
+    metadata:
+      labels:
+        editor: vscode
+        environment: production
+
+    spec:
+      # nodeSelector:
+      #   node: my-node
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+      - name: tomcat
+        image: tomcat
+        ports:
+        - name: catport
+          containerPort: 8080 # containerPort
+          protocol: TCP

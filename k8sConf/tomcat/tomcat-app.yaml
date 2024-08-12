@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tomcat-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: tomcat
+  template:
+    metadata:
+      labels:
+        app: tomcat
+    spec:
+      containers:
+      - name: tomcat
+        image: tomcat
+        ports:
+        - name: catport
+          containerPort: 8080 # containerPort
+          protocol: TCP
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: tomcat-servce
+spec:
+  selector:
+    app: tomcat
+  type: ClusterIP
+  ports:
+  - name: tom
+    port: 80
+    targetPort: 8080

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      editor: vscode
+    matchExpressions: # pod的标签中有key为envrionment且值在{production, staging}将会被选中
+    - key: environment
+      operators: In
+      values:
+      - production
+      - staging # 单词含义staging 临时环境
+
+
+  template:
+    metadata:
+      labels:
+        editor: vscode
+        environment: production
+
+    spec:
+      nodeSelector:
+        node: my-node
+
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+      - name: tomcat
+        image: tomcat
+        ports:
+        - name: catport
+          containerPort: 8080 # containerPort
+          protocol: TCP
+

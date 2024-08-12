@@ -1,0 +1,12 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: php-apach
+spec:
+  scaleTargetRef: # 作用的目标对象是
+    apiVersion: apps/v1
+    kind: Deployment
+    name: php-apach
+  minReplices: 1 # 扩缩容Pod数量的范围
+  maxReplices: 10
+  targetCPUUtilizationPercentage: 50 # 期望cpu的使用率都为50%。基于pod设置的cpu request计算

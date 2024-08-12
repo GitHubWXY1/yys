@@ -1,0 +1,13 @@
+apiVersion:
+kind: StatefulSet
+metadata:
+  name:
+  namespace:
+  labels:
+  annotations:
+spec:
+  replicas: int # 副本数
+  updateStrategy:
+    type: RollingUpdate # OnDelete 用户手动删除pod才会触发升级 和 Partitioned: 定义序号后面的会被升级，前面的不变
+
+  template: # pod模板

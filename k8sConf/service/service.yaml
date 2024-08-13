@@ -1,0 +1,7 @@
+# 每个service 转换成每一个节点上的 iptables或ipvs规则
+# 每一个kube-proxy,是一个daemonSet,watch所有的service,并转换为iptables/ipvs规则
+# iptables和ipvs进行调度
+# service是存在于每一个节点上，NodePort是开放每一个node的端口。集群外部可以通过
+# nodeip:port访问service，
+# 外部LoadBalancer LBAAS ,一种外部负载均衡，客户端访问相应的地址，负载到
+1

@@ -1,11 +1,29 @@
 # https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.11.1/deploy/static/provider/cloud/deploy.yaml
+# 创建输入ingrees controller 的命名空间
 apiVersion: v1
 kind: Namespace
 metadata:
   labels:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
-  name: ingress-nginx
+  name: ingress-nginx # ingress-controller需要在ingress-nginx的命名空间内使用
+
+# 给ingress-controller外部注入相应的配置
+---
+apiVersion: v1
+data:
+  allow-snippet-annotations: "false"
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/version: 1.11.1
+  name: ingress-nginx-controller
+  namespace: ingress-nginx
+# 启动RBAC 创建角色和授权
 ---
 apiVersion: v1
 automountServiceAccountToken: true
@@ -319,20 +337,9 @@ subjects:
 - kind: ServiceAccount
   name: ingress-nginx-admission
   namespace: ingress-nginx
----
-apiVersion: v1
-data:
-  allow-snippet-annotations: "false"
-kind: ConfigMap
-metadata:
-  labels:
-    app.kubernetes.io/component: controller
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/part-of: ingress-nginx
-    app.kubernetes.io/version: 1.11.1
-  name: ingress-nginx-controller
-  namespace: ingress-nginx
+
+
+# http service
 ---
 apiVersion: v1
 kind: Service
@@ -366,6 +373,8 @@ spec:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
   type: LoadBalancer
+
+# https service
 ---
 apiVersion: v1
 kind: Service
@@ -389,6 +398,8 @@ spec:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
   type: ClusterIP
+
+# with RBAC
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -512,6 +523,7 @@ spec:
       - name: webhook-cert
         secret:
           secretName: ingress-nginx-admission
+# 两个Job 批处理
 ---
 apiVersion: batch/v1
 kind: Job

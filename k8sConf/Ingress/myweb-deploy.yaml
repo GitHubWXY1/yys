@@ -31,7 +31,8 @@ metadata:
 spec:
   selector:
     app: myweb
-  type: NodePort
+  type: NodePort # 在任意的NodeIP:30001 可访问
   ports:
   - port: 8080
+    targetPort: 8080
     nodePort: 30001

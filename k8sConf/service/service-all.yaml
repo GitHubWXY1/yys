@@ -10,6 +10,8 @@ metadata:
 spec:
   selector:
   - name: string
+  externalTrafficPolicy: Cluster # Cluster无论流量到达哪个节点，Kubernetes 会将流量路由到集群内任何可以处理该流量的 Pod 上。这意味着流量可能会被重定向到其他节点，而不是直接处理请求的节点。
+  # Local 流量只会被路由到本地节点上运行的 Pod 上。如果流量到达的节点上没有可用的 Pod 处理请求，那么流量会被丢弃。
   type: string # ClusterIP、NodePort、LoadBalancer 类型为 NodePort时
   clusterIP: string # 类型为ClusterIP，会自动分配也可手工指定。类型为LoadBalancer，需要指定。为None时为headless Service
   sessionAffinity: string # 是否支持session，默认为None 用于无状态服务。可以选ClientIP：同一个客户端[根据ip]的请求都转发到同一个后端Pod

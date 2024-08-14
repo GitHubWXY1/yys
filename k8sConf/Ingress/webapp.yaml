@@ -1,3 +1,4 @@
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -7,7 +8,7 @@ spec:
   selector:
     matchLabels:
       editor: vscode
-  template:
+  template: # 一个包含nginx和tomcat的pod模板
     metadata:
       labels:
         editor: vscode

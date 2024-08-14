@@ -5,13 +5,14 @@ metadata:
   name: my-ingress
 spec:
   rules:
-  - host: mywebsite.com
+  - host: mywebsite.com # 用户访问mywebsite.com会被
+    # 进入到下面的解析内
     http:
       paths:
       - path: /demo
         pathType: ImplementationSpecific
-        backend:
-          service:
+        backend: # 被调度的后端主机
+          service: # 指定service定义 来找到相应的pod，进而注入pod相应的地址到 ingress Controller
             name: webapp
             port:
               number: 8080

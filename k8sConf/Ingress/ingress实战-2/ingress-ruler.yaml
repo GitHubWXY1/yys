@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-http
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules: # 规则
+    - host: it.nginx.com # 指定的监听的主机域名，相当于 nginx.conf 的 server { xxx }
+      http: # 指定路由规则
+        paths:
+          - path: /
+            pathType: Prefix # 匹配规则，Prefix 前缀匹配 it.nginx.com/* 都可以匹配到
+            backend: # 指定路由的后台服务的 service 名称
+              service:
+                name: nginx-svc # 服务名
+                port:
+                  number: 80 # 服务的端口

@@ -4,13 +4,15 @@ metadata:
   name: my-ingress
 
 spec:
+  ingressClassName: nginx
   rules:
   - host: mywebsite.com
     http:
       paths:
       - path: /demo
-        pathType: ImplementationSpecific
-        backend:
+        pathType: Prefix
+        backend: # service的绑定效果
           service:
-            name: webapp
-            port: 8080
+            name: myweb
+            port:
+              number: 8080

@@ -5,12 +5,12 @@ metadata:
   labels:
     app: myapplication
 data:
-  my-key: my-value
-  my-key2: my-value2
+  my-key: "my-value"
+  my-key2: "my-value2"
   # 使用 | 来表示后续的内容是一个多行字符串。这在存储复杂的文本内容时非常方便，例如配置文件、脚本等。
   config-file: |
     key1: value1
     key2: value2
     key3: value3
-  my-key3: my-value3
+  my-key3: "my-value3"
 

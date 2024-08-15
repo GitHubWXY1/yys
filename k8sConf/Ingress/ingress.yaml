@@ -4,6 +4,7 @@ kind: Ingress
 metadata:
   name: my-ingress
 spec:
+  ingressClassName: nginx
   rules:
   - host: mywebsite.com # 用户访问mywebsite.com会被
     # 进入到下面的解析内

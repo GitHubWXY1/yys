@@ -23,8 +23,11 @@ metadata:
     app.kubernetes.io/version: 1.11.1
   name: ingress-nginx-controller
   namespace: ingress-nginx
+
+
 # 启动RBAC 创建角色和授权
 ---
+
 apiVersion: v1
 automountServiceAccountToken: true
 kind: ServiceAccount
@@ -339,43 +342,46 @@ subjects:
   namespace: ingress-nginx
 
 
-# http service
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/component: controller
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/part-of: ingress-nginx
-    app.kubernetes.io/version: 1.11.1
-  name: ingress-nginx-controller
-  namespace: ingress-nginx
-spec:
-  externalTrafficPolicy: Local
-  ipFamilies:
-  - IPv4
-  ipFamilyPolicy: SingleStack
-  ports:
-  - appProtocol: http
-    name: http
-    port: 80
-    protocol: TCP
-    targetPort: http
-  - appProtocol: https
-    name: https
-    port: 443
-    protocol: TCP
-    targetPort: https
-  selector:
-    app.kubernetes.io/component: controller
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/name: ingress-nginx
-  type: LoadBalancer
 
-# https service
+
 ---
+# LoadBalancer service
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  labels:
+#    app.kubernetes.io/component: controller
+#    app.kubernetes.io/instance: ingress-nginx
+#    app.kubernetes.io/name: ingress-nginx
+#    app.kubernetes.io/part-of: ingress-nginx
+#    app.kubernetes.io/version: 1.11.1
+#  name: ingress-nginx-controller
+#  namespace: ingress-nginx
+#spec:
+#  externalTrafficPolicy: Local
+#  ipFamilies:
+#  - IPv4
+#  ipFamilyPolicy: SingleStack
+#  ports:
+#  - appProtocol: http
+#    name: http
+#    port: 80
+#    protocol: TCP
+#    targetPort: http
+#  - appProtocol: https
+#    name: https
+#    port: 443
+#    protocol: TCP
+#    targetPort: https
+#  selector:
+#    app.kubernetes.io/component: controller
+#    app.kubernetes.io/instance: ingress-nginx
+#    app.kubernetes.io/name: ingress-nginx
+#  type: LoadBalancer
+
+
+---
+# ClusterIP service
 apiVersion: v1
 kind: Service
 metadata:
@@ -392,15 +398,16 @@ spec:
   - appProtocol: https
     name: https-webhook
     port: 443
-    targetPort: webhook
+    targetPort: webhook #这里是pod中port的name
   selector:
     app.kubernetes.io/component: controller
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
   type: ClusterIP
 
-# with RBAC
+
 ---
+# 创建 ingress-nginx容器的pod
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -523,8 +530,9 @@ spec:
       - name: webhook-cert
         secret:
           secretName: ingress-nginx-admission
-# 两个Job 批处理
+
 ---
+# 两个Job 批处理
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -629,6 +637,7 @@ spec:
       restartPolicy: OnFailure
       serviceAccountName: ingress-nginx-admission
 ---
+# IngressClass ： ingress 和 ingress Controller 绑定的桥梁
 apiVersion: networking.k8s.io/v1
 kind: IngressClass
 metadata:

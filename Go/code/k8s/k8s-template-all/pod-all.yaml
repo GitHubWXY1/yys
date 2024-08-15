@@ -1,17 +1,16 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: my-pod
+  name: title
   labels:
-    role: user
+    role: title
 spec:
-
   containers:
-    - name: my-nginx
+    - name: title
       image: nginx
       imagePullPolicy: IfNotPresent
       ports:
-        - name: nginx-port
+        - name: title
           containerPort: 80
           protocol: TCP
   restartPolicy: Always

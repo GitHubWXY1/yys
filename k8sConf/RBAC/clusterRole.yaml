@@ -1,0 +1,10 @@
+# 集群角色
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: wxy-clusterrole
+  # 没有命名空间
+rules:
+  - apiGroups: [""] # "" 标明 core API 组，默认留空即可。
+    resources: ["namespaces"]
+    verbs: ["get", "watch", "list"]

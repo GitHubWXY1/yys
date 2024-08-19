@@ -1,0 +1,56 @@
+# 名称空间角色
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: xudaxian-role
+  namespace: default # 所属的名称空间
+rules: # 当前角色的规则
+  - apiGroups: [""] # "" 标明 core API 组，默认留空即可。
+    resources: ["pods"] # 指定能操作的资源 ，通过 kubectl api-resources 查看即可。
+    # resourceNames: [""] #  指定只能操作某个名字的资源
+    verbs: ["get", "watch", "list"] # 操作动作，通过 kubectl api-resources -o wide 查看即可。
+---
+# 集群角色
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: xudaxian-clusterrole
+rules:
+  - apiGroups: [""] # "" 标明 core API 组，默认留空即可。
+    resources: ["namespaces"]
+    verbs: ["get", "watch", "list"]
+---
+# ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: xudaxian # ServiceAccount 的名称
+  namespace: default
+---
+# 账号和角色绑定
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: xudaxian-rolebinding
+  namespace: default
+subjects:
+  - kind: ServiceAccount
+    name: xudaxian # "name" 是区分大小写的
+roleRef:
+  kind: Role
+  name: xudaxian-role
+  apiGroup: rbac.authorization.k8s.io
+---
+# 账号和集群角色绑定
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: xudaxian-clusterrolebinding
+subjects:
+  - kind: ServiceAccount
+    name: xudaxian # "name" 是区分大小写的
+    namespace: default # 如果资源是某个 namespace 下的，那么就需要设置 namespace
+roleRef:
+  kind: ClusterRole
+  name: xudaxian-clusterrole
+  apiGroup: rbac.authorization.k8s.io

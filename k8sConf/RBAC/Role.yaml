@@ -1,0 +1,10 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: wxy-role
+rules:
+  - apiGroups: [ "" ] # "" indicates the core API group
+    resources: [ "pods" ] # resources：支持的资源对象列表，通过 kubectl api-resources 查看
+    verbs: [get, watch, list] # 对资源对象的操作方法列表，通过 kubectl api-resources -o wide 查看。create,delete,deletecollection,get,list,patch,update,watch
+    

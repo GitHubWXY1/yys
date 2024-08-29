@@ -1,0 +1,32 @@
+####左右滑动
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: crontabs.stable.example.com
+spec:
+  # 设置：/apis/下级目录 =》 /apis/stable.example.com
+  group: stable.example.com
+  versions:
+    - name: v1
+      served: true # 是否启用
+      storage: true # 是否进行存储
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                cronSpec:
+                  type: string
+                image:
+                  type: string
+                replicas:
+                  type: integer
+  scope: Namespaced # 可选 Namespaced、Cluster。默认Namespace
+  names:
+    plural: crontabs # 复数形式
+    singular: crontab # 单数形式
+    kind: CronTab # 资源类型
+    shortNames: # 缩写
+      - ct
